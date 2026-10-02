@@ -1,0 +1,5 @@
+public enum WorkshopCategory{
+        PROGRAMMING,DATABASE, NETWORKING, CYBERSECURITY, DATA_SCIENCE
+    }
+
+
