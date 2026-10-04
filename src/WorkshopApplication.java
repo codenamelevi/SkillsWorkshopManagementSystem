@@ -7,11 +7,13 @@ public class WorkshopApplication {
     public static String workshopTitle;
     public static String facilitatorName ;
     public static String workshopDate ;
-    public static double workshopFee ;
+    public static int workshopFee ;
     public static int maximumCapacity;
     public static int numberOfRegistrations;
     public static int availableSpaces;
     public static WorkshopCategory workshopCategory;
+
+
 
     // Participant variables
 
@@ -55,11 +57,17 @@ public class WorkshopApplication {
         MainMenu.workshopHashMapMap.put(6, new Workshop(6, "Data Analytics", WorkshopCategory.DATA_SCIENCE, "TBA", "2026-09-01",25,
                 0, true, 1250));
 
+        for(Integer existingWorkshopId : MainMenu.workshopHashMapMap.keySet()){
+            MainMenu.registeredWorkshopID.add(existingWorkshopId);
+        }
+
 
         String value_1 = "confirmed";
         String value_2 = "CONFIRMED";
         ReusableMethods.compareIgnoreCase(value_1, value_2);
         System.out.println("Statuses match (ignoring case): " + ReusableMethods.compareIgnoreCase(value_1, value_2));
+        ReusableMethods.loadData();
         MainMenu.menu(scanner);
+
     }
 }

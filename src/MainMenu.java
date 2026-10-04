@@ -1,3 +1,5 @@
+import com.sun.tools.javac.Main;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class MainMenu {
 
@@ -18,6 +21,8 @@ public class MainMenu {
             "Cybersecurity Awareness",
             "Data Analytics"
     };
+
+
 
     private static final int[] workshopCapacities = {
             30,
@@ -90,6 +95,11 @@ public class MainMenu {
         return workshopFees;
     }
 
+    public static WorkshopCategory[] getWorkshopCategories() {
+
+        return workshopCategories;
+    }
+
 
 
     public static int[] registeredParticipantPerWorkshop = new int[WorkshopTitles.length];
@@ -107,8 +117,8 @@ public class MainMenu {
 
 
 
-
     public static void menu(Scanner scanner) {
+
 
 
         int choice = 0;
@@ -139,6 +149,8 @@ public class MainMenu {
 
                     System.out.println("1. View All Workshops");
                     System.out.println("2. Browse by category");
+                    System.out.println("3. Create new workshop");
+
 
                     int workshopMenuChoice = scanner.nextInt();
                     scanner.nextLine();
@@ -206,10 +218,102 @@ public class MainMenu {
                                 System.out.println("Invalid option chosen");
                             }
                             break;
+
+                        case 3:
+                            System.out.println("Please enter workshop ID: \n");
+
+                            WorkshopApplication.workshopId = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if(registeredWorkshopID.contains(WorkshopApplication.workshopId)){
+                            System.out.println("Workshop ID is already registered.");
+                            break;
+                        }
+
+                            System.out.println("Please enter workshop title: \n");
+
+                            WorkshopApplication.workshopTitle = scanner.nextLine();
+
+                            for (String a : getWorkshopTitles()){
+                                if(WorkshopApplication.workshopTitle.equals(a)){
+                                    System.out.println("Workshop Title is already registered.");
+                                    break;
+                                }
+                            }
+
+                            System.out.println("Please select a workshop category: \n");
+
+                            int i = 1;
+
+                            for(WorkshopCategory a :  WorkshopCategory.values()){
+                                System.out.println(i + ". " + a);
+                                i++;
+                            }
+
+                            int categoryChoice2 = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if(categoryChoice2 > 5 || categoryChoice2 < 1){
+                                System.out.println("Invalid choice");
+                                break;
+                            }else{
+                                WorkshopApplication.workshopCategory = WorkshopCategory.values()[categoryChoice2 - 1];
+                            }
+
+                            System.out.println("Please enter workshop facilitator: \n");
+
+                            WorkshopApplication.facilitatorName = scanner.nextLine();
+
+                            System.out.println("Please enter workshop date: \n");
+
+                            WorkshopApplication.workshopDate = scanner.nextLine();
+
+                            for(String date : workshopDates){
+                                if(WorkshopApplication.workshopDate.equals(date)){
+                                    System.out.println("Workshop date is unavailable.");
+                                    break;
+                                }
+                            }
+
+
+                            System.out.println("Please enter workshop capacity: \n");
+
+                            WorkshopApplication.maximumCapacity = scanner.nextInt();
+                            scanner.nextLine();
+
+                            System.out.println("Please enter the number of registrations the workshop will take: \n");
+                            WorkshopApplication.numberOfRegistrations = scanner.nextInt();
+                            scanner.nextLine();
+
+                            System.out.println("Please enter workshop Fee: \n");
+
+                            WorkshopApplication.workshopFee = scanner.nextInt();
+                            scanner.nextLine();
+
+
+                            System.out.println("Please enter whether this workshop will be active upon creation: \n");
+
+                            System.out.println("1. True");
+                            System.out.println("2. False");
+
+                            int act = scanner.nextInt();
+                            scanner.nextLine();
+
+                            boolean newWorkshopStatus ;
+
+                            if(act == 1){
+                                 newWorkshopStatus = true;
+                            }else{
+                                 newWorkshopStatus = false;
+
+                            }
+                            MainMenu.workshopHashMapMap.put(WorkshopApplication.workshopId, new Workshop(WorkshopApplication.workshopId, WorkshopApplication.workshopTitle, WorkshopApplication.workshopCategory, WorkshopApplication.facilitatorName, WorkshopApplication.workshopDate,WorkshopApplication.maximumCapacity,
+                                    WorkshopApplication.numberOfRegistrations, newWorkshopStatus, WorkshopApplication.workshopFee));
+
+                            registeredWorkshopID.add(WorkshopApplication.workshopId);
+                            break;
                     }
-
                     break;
-
                 case 2:
                     System.out.println("Manage participants selected.");
 
@@ -235,6 +339,10 @@ public class MainMenu {
                         System.out.println("Invalid Participant Id");
                         break;
                     }
+                    if(registeredParticipantID.contains(WorkshopApplication.participantId)){
+                        System.out.println("Participant ID is already registered.");
+                        break;
+                    }
 
                     System.out.println("Please enter a participant Full Name: ");
                     WorkshopApplication.participantFullName = scanner.nextLine();
@@ -243,7 +351,6 @@ public class MainMenu {
                         System.out.println("Participant name may not be blank.");
                         break;
                     }
-
                     String[] parts = WorkshopApplication.participantFullName.split("\\s+");
                     for (int i = 0; i < parts.length; i++) {
                         parts[i] = ReusableMethods.titlecase(parts[i]);
@@ -301,6 +408,8 @@ public class MainMenu {
                             registeredParticipantEmail.add(WorkshopApplication.participantEmail);
 
                             registeredParticipantIds.add(WorkshopApplication.participantId);
+
+                            registeredParticipantID.add(WorkshopApplication.participantId);
 
                             ReusableMethods.exportReport();
 
@@ -403,5 +512,9 @@ public class MainMenu {
 
         }while(choice != 9);
 
+    }
+
+    public static HashMap<Integer, Participant> getParticipantHashMap() {
+        return participantHashMap;
     }
 }
